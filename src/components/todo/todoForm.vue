@@ -1,10 +1,10 @@
 <template>
   <div class="todoForm">
     <!-- 添加按钮 -->
-    <el-button type="primary" @click="addTodo" style="margin-bottom: 20px;">
+    <el-button type="primary" @click="addTodo" style="margin-bottom: 20px">
       新增待办事项
     </el-button>
-    
+
     <div class="todoItem" v-for="todo in todos" :key="todo.id">
       <input type="checkbox" :checked="todo.completed" @change="toggleTodo(todo.id)" />
       <div class="todoContent">
@@ -21,7 +21,7 @@
       </button>
     </div>
     <div v-if="todos.length === 0" class="emptyTip">暂无待办事项</div>
-    
+
     <!-- 待办事项对话框 -->
     <TodoDialog
       v-model:visible="dialogVisible"
@@ -38,7 +38,7 @@ import { Delete, Edit } from '@element-plus/icons-vue'
 import TodoDialog from './TodoDialog.vue'
 
 // 定义props
-const props = defineProps({
+defineProps({
   todos: {
     type: Array,
     default: () => [],
