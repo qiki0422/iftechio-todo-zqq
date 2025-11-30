@@ -58,6 +58,17 @@ const rules = {
       message: '请输入待办事项标题',
       trigger: 'blur',
     },
+    {
+      validator: (rule, value, callback) => {
+        // 检查标题是否只包含空格
+        if (value && !value.trim()) {
+          callback(new Error('标题不能只包含空格'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur',
+    },
   ],
 }
 
@@ -109,14 +120,16 @@ const handleCancel = () => {
 }
 
 const handleConfirm = () => {
-  // 验证表单
-  formRef.value.validate((valid) => {
-    if (valid) {
-      // 验证通过，发送确认事件
-      emit('confirm', { ...formData.value })
-      dialogVisible.value = false
-    }
-  })
+  // 验证表单，先检查formRef.value是否存在
+  if (formRef.value) {
+    formRef.value.validate((valid) => {
+      if (valid) {
+        // 验证通过，发送确认事件
+        emit('confirm', { ...formData.value })
+        dialogVisible.value = false
+      }
+    })
+  }
 }
 </script>
 

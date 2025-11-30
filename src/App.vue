@@ -44,18 +44,22 @@ const handleEditTodo = (todo) => {
   updateTodo(todo)
 }
 
+// 搜索关键字
+const searchKeyword = ref('')
+// 实际用于搜索的查询参数
+const searchQuery = ref('')
+
 // 过滤后的待办事项
 const filteredTodos = computed(() => {
-  return searchTodos(searchKeyword.value)
+  return searchTodos(searchQuery.value)
 })
 
 // 处理搜索
 const handleSearch = () => {
-  console.log('搜索关键字:', searchKeyword.value)
+  console.log('通过搜索按钮触发搜索:', searchKeyword.value)
+  // 将输入框中的内容设置为实际搜索查询
+  searchQuery.value = searchKeyword.value
 }
-
-// 搜索关键字
-const searchKeyword = ref('')
 </script>
 <style scoped>
 .title {
