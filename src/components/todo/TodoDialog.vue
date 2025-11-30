@@ -1,7 +1,7 @@
 <template>
   <el-dialog v-model="dialogVisible" :title="dialogTitle" width="500px">
-    <el-form :model="formData" label-width="100px">
-      <el-form-item label="标题">
+    <el-form ref="formRef" :model="formData" :rules="rules" label-width="100px">
+      <el-form-item label="标题" prop="title">
         <el-input v-model="formData.title" placeholder="请输入待办事项标题" />
       </el-form-item>
       <el-form-item label="描述">
@@ -48,6 +48,19 @@ const formData = ref({
   description: '',
 })
 
+const formRef = ref(null)
+
+// 表单验证规则
+const rules = {
+  title: [
+    {
+      required: true,
+      message: '请输入待办事项标题',
+      trigger: 'blur',
+    },
+  ],
+}
+
 // 计算属性
 const dialogVisible = computed({
   get: () => props.visible,
@@ -76,19 +89,34 @@ watch(
   (newVisible) => {
     if (newVisible) {
       initFormData()
+      // 延迟重置表单验证状态，确保对话框完全显示
+      setTimeout(() => {
+        if (formRef.value) {
+          formRef.value.clearValidate()
+        }
+      }, 0)
     }
   },
 )
 
 // 方法
 const handleCancel = () => {
+  // 重置表单验证状态
+  if (formRef.value) {
+    formRef.value.resetFields()
+  }
   dialogVisible.value = false
 }
 
 const handleConfirm = () => {
-  // 发送确认事件，携带表单数据
-  emit('confirm', { ...formData.value })
-  dialogVisible.value = false
+  // 验证表单
+  formRef.value.validate((valid) => {
+    if (valid) {
+      // 验证通过，发送确认事件
+      emit('confirm', { ...formData.value })
+      dialogVisible.value = false
+    }
+  })
 }
 </script>
 
